@@ -401,7 +401,7 @@ class _ValueCompleter(object):
             vim.command('let s:completions = %s' % result)
 
 
-variables = {'ropevim_enable_autoimport': 1,
+VARIABLES = {'ropevim_enable_autoimport': 1,
              'ropevim_autoimport_underlineds': 0,
              'ropevim_codeassist_maxfixes' : 1,
              'ropevim_enable_shortcuts' : 1,
@@ -412,16 +412,16 @@ variables = {'ropevim_enable_autoimport': 1,
              'ropevim_vim_completion': 0,
              'ropevim_guess_project': 0}
 
-shortcuts = {'code_assist': '<M-/>',
+SHORTCUTS = {'code_assist': '<M-/>',
              'lucky_assist': '<M-?>',
              'goto_definition': '<C-c>g',
              'show_doc': '<C-c>d',
              'find_occurrences': '<C-c>f'}
 
-insert_shortcuts = {'code_assist': '<M-/>',
+INSERT_SHORTCUTS = {'code_assist': '<M-/>',
                     'lucky_assist': '<M-?>'}
 
-menu_structure = (
+MENU_STRUCTURE = (
     'open_project',
     'close_project',
     'find_file',
@@ -452,16 +452,16 @@ menu_structure = (
 
 
 def _init_variables():
-    for variable, default in variables.items():
+    for variable, default in VARIABLES.items():
         vim.command('if !exists("g:%s")\n' % variable +
                     '  let g:%s = %s\n' % (variable, default))
 
 def _enable_shortcuts(env):
     if env.get('enable_shortcuts'):
-        for command, shortcut in shortcuts.items():
+        for command, shortcut in SHORTCUTS.items():
             vim.command('map %s :call %s()<cr>' %
                         (shortcut, _vim_name(command)))
-        for command, shortcut in insert_shortcuts.items():
+        for command, shortcut in INSERT_SHORTCUTS.items():
             command_name = _vim_name(command) + 'InsertMode'
             vim.command('func! %s()\n' % command_name +
                         'call %s()\n' % _vim_name(command) +
@@ -474,7 +474,7 @@ def _add_menu(env, root_node='&Ropevim'):
 
     vim.command('silent! aunmenu %s' % root_node)
 
-    for i, cb in enumerate(menu_structure):
+    for i, cb in enumerate(MENU_STRUCTURE):
         if cb is None:
             vim.command('amenu <silent> %s.-SEP%s- :' % (root_node, i))
             continue
