@@ -1,6 +1,10 @@
 
 forked from https://bitbucket.org/agr/ropevim
 
+run::
+   $ git submodule init && git submodule update
+   $ rake init
+
 
 ======================
  ropevim, rope in vim
