@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 """ropevim, a vim mode for using rope refactoring library"""
+
 import os
 import tempfile
 import re

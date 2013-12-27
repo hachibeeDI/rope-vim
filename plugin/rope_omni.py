@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import vim
 import ropevim
 import ropemode.interface
