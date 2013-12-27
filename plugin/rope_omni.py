@@ -6,7 +6,8 @@ import ropemode.interface
 
 
 class RopeOmniCompleter(object):
-    """ The class used to complete python code. """
+    """ The class used to complete python code.
+    """
 
     def __init__(self, base=""):
         self.assist = None

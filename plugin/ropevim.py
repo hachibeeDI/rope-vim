@@ -96,14 +96,16 @@ class VimUtils(ropemode.environment.Environment):
 
     def _get_encoding(self):
         return vim.eval('&encoding')
+
     def _encode_line(self, line):
         return line.encode(self._get_encoding())
+
     def _decode_line(self, line):
         return line.decode(self._get_encoding())
 
     def _position_to_offset(self, lineno, colno):
-        result = min(colno, len(self.buffer[lineno -1]) + 1)
-        for line in self.buffer[:lineno-1]:
+        result = min(colno, len(self.buffer[lineno - 1]) + 1)
+        for line in self.buffer[:lineno - 1]:
             line = self._decode_line(line)
             result += len(line) + 1
         return result
@@ -230,7 +232,6 @@ class VimUtils(ropemode.environment.Environment):
         tofile = open(filename, 'w')
         try:
             for location in locations:
-                lineno = location.lineno
                 err = '%s:%d: %s %s\n' % (
                     os.path.relpath(location.filename), location.lineno,
                     location.note, location.line_content)
@@ -256,9 +257,11 @@ class VimUtils(ropemode.environment.Environment):
                           prekey=self.get('global_prefix'))
 
     def add_hook(self, name, callback, hook):
-        mapping = {'before_save': 'FileWritePre,BufWritePre',
-                   'after_save': 'FileWritePost,BufWritePost',
-                   'exit': 'VimLeave'}
+        mapping = {
+            'before_save': 'FileWritePre,BufWritePre',
+            'after_save': 'FileWritePost,BufWritePost',
+            'exit': 'VimLeave'
+        }
         self._add_function(name, callback)
         vim.command('autocmd %s *.py call %s()' %
                     (mapping[hook], _vim_name(name)))
@@ -282,6 +285,7 @@ class VimUtils(ropemode.environment.Environment):
         return proposal
 
     _docstring_re = re.compile('^[\s\t\n]*([^\n]*)')
+
     def _extended_completion(self, proposal):
         # we are using extended complete and return dicts instead of strings.
         # `ci` means "completion item". see `:help complete-items`
@@ -336,10 +340,10 @@ class VimUtils(ropemode.environment.Environment):
         else:
             type_ = type_.ljust(5)[:5]
         ci['menu'] = ' '.join((scope, type_, info))
-        ret =  u'{%s}' % \
-               u','.join(u'"%s":"%s"' % \
-                         (key, value.replace('"', '\\"')) \
-                         for (key, value) in ci.iteritems())
+        ret = u'{%s}' % \
+            u','.join(u'"%s":"%s"' %
+                      (key, value.replace('"', '\\"'))
+                      for (key, value) in ci.iteritems())
         return ret
 
 
@@ -374,6 +378,7 @@ def echo(message):
         message = message.encode(vim.eval('&encoding'))
     print message
 
+
 def call(command):
     return vim.eval(command)
 
@@ -393,33 +398,40 @@ class _ValueCompleter(object):
         # don't know if self.values can be empty but better safe then sorry
         if self.values:
             if not isinstance(self.values[0], basestring):
-                result = [proposal.name for proposal in self.values \
-                          if proposal.name.startswith(arg_lead)]
+                result = [
+                    proposal.name for proposal in self.values
+                    if proposal.name.startswith(arg_lead)
+                ]
             else:
-                result = [proposal for proposal in self.values \
-                          if proposal.startswith(arg_lead)]
+                result = [proposal for proposal in self.values if proposal.startswith(arg_lead)]
             vim.command('let s:completions = %s' % result)
 
 
-VARIABLES = {'ropevim_enable_autoimport': 1,
-             'ropevim_autoimport_underlineds': 0,
-             'ropevim_codeassist_maxfixes' : 1,
-             'ropevim_enable_shortcuts' : 1,
-             'ropevim_autoimport_modules': '[]',
-             'ropevim_confirm_saving': 0,
-             'ropevim_local_prefix': '"<C-c>r"',
-             'ropevim_global_prefix': '"<C-x>p"',
-             'ropevim_vim_completion': 0,
-             'ropevim_guess_project': 0}
+VARIABLES = {
+    'ropevim_enable_autoimport': 1,
+    'ropevim_autoimport_underlineds': 0,
+    'ropevim_codeassist_maxfixes': 1,
+    'ropevim_enable_shortcuts': 1,
+    'ropevim_autoimport_modules': '[]',
+    'ropevim_confirm_saving': 0,
+    'ropevim_local_prefix': '"<C-c>r"',
+    'ropevim_global_prefix': '"<C-x>p"',
+    'ropevim_vim_completion': 0,
+    'ropevim_guess_project': 0
+}
 
-SHORTCUTS = {'code_assist': '<M-/>',
-             'lucky_assist': '<M-?>',
-             'goto_definition': '<C-c>g',
-             'show_doc': '<C-c>d',
-             'find_occurrences': '<C-c>f'}
+SHORTCUTS = {
+    'code_assist': '<M-/>',
+    'lucky_assist': '<M-?>',
+    'goto_definition': '<C-c>g',
+    'show_doc': '<C-c>d',
+    'find_occurrences': '<C-c>f'
+}
 
-INSERT_SHORTCUTS = {'code_assist': '<M-/>',
-                    'lucky_assist': '<M-?>'}
+INSERT_SHORTCUTS = {
+    'code_assist': '<M-/>',
+    'lucky_assist': '<M-?>'
+}
 
 MENU_STRUCTURE = (
     'open_project',
@@ -427,7 +439,7 @@ MENU_STRUCTURE = (
     'find_file',
     'undo',
     'redo',
-    None, # separator
+    None,  # separator
     'rename',
     'extract_variable',
     'extract_method',
@@ -440,7 +452,7 @@ MENU_STRUCTURE = (
     'rename_current_module',
     'move_current_module',
     'module_to_package',
-    None, # separator
+    None,  # separator
     'code_assist',
     'goto_definition',
     'show_doc',
@@ -456,6 +468,7 @@ def _init_variables():
         vim.command('if !exists("g:%s")\n' % variable +
                     '  let g:%s = %s\n' % (variable, default))
 
+
 def _enable_shortcuts(env):
     if env.get('enable_shortcuts'):
         for command, shortcut in SHORTCUTS.items():
@@ -468,6 +481,7 @@ def _enable_shortcuts(env):
                         'return ""\n'
                         'endfunc')
             vim.command('imap %s <C-R>=%s()<cr>' % (shortcut, command_name))
+
 
 def _add_menu(env, root_node='&Ropevim'):
     cmd_tmpl = '%s <silent> %s.%s :call %s()<cr>'
@@ -497,4 +511,4 @@ _interface.init()
 _enable_shortcuts(_env)
 
 _add_menu(_env)
-_add_menu(_env, 'PopUp.&Ropevim') # menu weight can also be added
+_add_menu(_env, 'PopUp.&Ropevim')  # menu weight can also be added
