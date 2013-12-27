@@ -5,5 +5,3 @@
 doc/build/
 build/
 dist/
-
-plugin/ropemode/*

@@ -1,3 +1,6 @@
 [submodule "plugin/rope"]
 	path = plugin/rope
 	url = https://github.com/python-rope/rope.git
+[submodule "plugin/ropemode"]
+	path = plugin/ropemode
+	url = https://github.com/python-rope/ropemode.git
