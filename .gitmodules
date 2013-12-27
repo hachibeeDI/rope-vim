@@ -1,0 +1,3 @@
+[submodule "plugin/rope"]
+	path = plugin/rope
+	url = https://github.com/python-rope/rope.git
